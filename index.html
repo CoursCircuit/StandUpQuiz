@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light">
+  <title>StandUp Quiz</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="core.js" defer></script>
+  <script src="view.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <svg class="svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 0 1 4.9.5c0 1.8-2.5 2-2.5 3.5m0 3h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></symbol>
+    <symbol id="i-import" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4 15v5h16v-5"/></symbol>
+    <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 15V3m-4 4 4-4 4 4M4 15v5h16v-5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6L12 3Zm7-1v4m-2-2h4"/></symbol>
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M4 3h13l4 4v14H3V3h1Zm3 0v6h10V3M7 21v-8h10v8"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8V4Z"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-width="4"/></symbol>
+    <symbol id="i-back" viewBox="0 0 24 24"><path d="m10 5-7 7 7 7M3 12h18"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="m14 5 7 7-7 7M3 12h18"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 4 3 10l6 6M3 10h10a7 7 0 0 1 7 7v3"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><path d="M4 8v13h16V8M3 3h18v5H3V3Zm6 9h6"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M7 3h10v7a5 5 0 0 1-10 0V3Zm0 2H3v3a4 4 0 0 0 4 4m10-7h4v3a4 4 0 0 1-4 4m-5 3v6m-5 0h10"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7V4h7l2 3h9v13H3V7Z"/></symbol>
+    <symbol id="i-screen" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/></symbol>
+  </defs></svg>
+  <a class="skip-link" href="#wordInput">Aller à la liste de mots</a>
+  <header class="app-header">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>StandUp Quiz</span></div>
+    <p id="gameMeta" class="game-meta" hidden></p>
+    <div class="header-actions">
+      <span id="saveStatus" class="save-status" role="status">Chargement…</span>
+      <button id="homeButton" class="btn secondary" hidden>Quitter la partie</button>
+      <button id="helpButton" class="btn ghost"><svg class="icon"><use href="#i-help"/></svg><span>Comment jouer</span></button>
+      <button id="audienceButton" class="btn secondary" aria-pressed="false"><svg class="icon"><use href="#i-screen"/></svg><span>Écran élèves</span></button>
+      <button id="fullscreenButton" class="btn icon-btn" title="Plein écran (F)" aria-label="Activer ou quitter le plein écran"><svg class="icon"><use href="#i-expand"/></svg></button>
+    </div>
+  </header>
+  <div id="storageError" class="storage-error" role="alert" hidden></div>
+  <div id="setupView" class="setup-shell">
+    <aside class="library" aria-label="Bibliothèque de listes">
+      <div class="library-heading"><h2>Mes listes</h2><button id="newListButton" class="btn icon-btn" aria-label="Créer une nouvelle liste" title="Nouvelle liste"><svg class="icon"><use href="#i-plus"/></svg></button></div>
+      <div class="search-box"><svg class="icon"><use href="#i-search"/></svg><input id="listSearch" type="search" placeholder="Rechercher une liste…" aria-label="Rechercher une liste"></div>
+      <div class="folder-filter"><label class="sr-only" for="folderFilter">Filtrer par dossier</label><select id="folderFilter"><option value="all">Tous les dossiers</option></select><button id="newFolderButton" class="btn icon-btn" title="Nouveau dossier" aria-label="Créer un dossier"><svg class="icon"><use href="#i-plus"/></svg></button><button id="manageFolderButton" class="btn icon-btn" title="Gérer ce dossier" aria-label="Renommer ou supprimer le dossier" disabled>···</button></div>
+      <nav id="libraryList" aria-label="Listes enregistrées"></nav>
+      <div class="library-bottom">
+        <button id="showArchivesButton" class="text-btn"><svg class="icon"><use href="#i-archive"/></svg><span>Listes archivées</span></button>
+        <button id="importLibraryButton" class="text-btn"><svg class="icon"><use href="#i-import"/></svg>Importer une bibliothèque</button>
+        <button id="exportLibraryButton" class="text-btn"><svg class="icon"><use href="#i-export"/></svg>Exporter ma bibliothèque</button>
+        <p>Vos listes restent sur cet appareil.</p>
+      </div>
+    </aside>
+    <main class="workspace">
+      <div class="workspace-heading"><h1>Préparez le prochain défi.</h1><p>Une question. Une équipe. Tout le monde participe.</p></div>
+      <div id="resumeBanner" class="resume-banner" hidden><div class="grow"><strong id="resumeHeading">Une partie vous attend.</strong><span id="resumeDetails"></span></div><button id="resumeButton" class="btn secondary"><svg class="icon"><use href="#i-play"/></svg>Reprendre la partie</button><button id="dismissSessionButton" class="btn icon-btn" aria-label="Fermer le dernier bilan" title="Fermer le dernier bilan"><svg class="icon"><use href="#i-close"/></svg></button></div>
+      <div class="preparation-grid">
+        <section class="editor panel" aria-labelledby="editorHeading">
+          <div class="panel-title"><h2 id="editorHeading">Contenu de la liste</h2><span id="draftStatus" class="muted small"></span></div>
+          <div class="editor-toolbar"><label class="grow"><span class="sr-only">Nom de la liste</span><input id="listTitle" maxlength="100" placeholder="Nom de la liste" autocomplete="off"></label><button id="importButton" class="btn secondary"><svg class="icon"><use href="#i-import"/></svg>Importer</button><button id="aiButton" class="btn secondary"><svg class="icon"><use href="#i-spark"/></svg>Prompt IA</button></div>
+          <div class="list-metadata"><label class="field">Branche<select id="subjectSelect"></select></label><label class="field">Dossier<select id="listFolderSelect"><option value="">Sans dossier</option></select></label><button id="editorFolderButton" class="btn icon-btn" title="Créer un dossier pour cette liste" aria-label="Créer un dossier pour cette liste"><svg class="icon"><use href="#i-folder"/></svg></button><button id="sampleButton" class="text-btn">Insérer un exemple</button></div>
+          <div class="language-fields"><label>Première colonne<input id="frontLabel" maxlength="32" value="Français" aria-label="Langue ou contenu de la première colonne"></label><span aria-hidden="true">→</span><label>Deuxième colonne<input id="backLabel" maxlength="32" value="Allemand" aria-label="Langue ou contenu de la deuxième colonne"></label></div>
+          <div class="text-editor"><pre id="lineNumbers" aria-hidden="true">1</pre><textarea id="wordInput" aria-label="Questions et réponses" aria-describedby="formatHint parseStatus" placeholder="question ; réponse&#10;7 × 8 ; 56&#10;Prise de la Bastille ; 1789" spellcheck="false" wrap="off" maxlength="1000000"></textarea></div>
+          <div class="editor-feedback"><p id="formatHint">Virgules, points-virgules ou colonnes de tableur.</p><strong id="parseStatus" role="status"></strong></div>
+          <details id="parseErrors" class="parse-errors" hidden><summary id="parseErrorSummary"></summary><ul id="parseErrorList"></ul></details>
+          <p id="parseNote" class="small muted" hidden></p>
+          <div class="editor-actions"><details class="list-options"><summary class="btn icon-btn" aria-label="Options de la liste" title="Options de la liste">···</summary><div class="options-menu"><button id="duplicateButton">Créer une copie</button><button id="exportListButton">Exporter cette liste</button><button id="archiveButton">Archiver cette liste</button></div></details><div class="grow"></div><button id="previewButton" class="btn"><svg class="icon"><use href="#i-eye"/></svg>Aperçu</button><button id="saveListButton" class="btn primary"><svg class="icon"><use href="#i-save"/></svg>Enregistrer la liste</button></div>
+        </section>
+        <section class="settings panel" aria-labelledby="settingsHeading">
+          <h2 id="settingsHeading">La partie</h2>
+          <label class="field">Mode de jeu<select id="modeSelect"><option value="classic">Classique · chacun son score</option><option value="cooperative">Coopératif · tous ensemble</option></select></label><p id="modeHint" class="mode-hint"></p>
+          <label id="cooperativeOptions" class="field" hidden>Objectif collectif<select id="goalPercent"><option value="50">50 % des manches</option><option value="70">70 % des manches</option><option value="80">80 % des manches</option><option value="100">100 % des manches</option></select></label>
+          <fieldset><legend>Équipes</legend><div id="teamCount" class="segments" role="group" aria-label="Nombre d’équipes"><button data-teams="2">2</button><button data-teams="3">3</button><button data-teams="4">4</button><button data-teams="5">5</button><button data-teams="6">6</button></div></fieldset>
+          <div class="round-plan"><label class="field">Nombre de questions<select id="roundsSelect" required aria-describedby="roundsHint"><option value="0">Choisir le nombre…</option></select></label><p id="roundsHint" role="status"></p></div>
+          <fieldset><legend>Réponses par équipe</legend><div id="wordCount" class="segments" role="group" aria-label="Réponses par équipe"><button data-words="2">2</button><button data-words="3">3</button><button data-words="4">4</button><button data-words="5">5</button></div></fieldset>
+          <label class="field">Temps de réflexion<select id="countdownSelect"><option value="0">Sans limite</option><option value="3">3 secondes</option><option value="5">5 secondes</option><option value="8">8 secondes</option><option value="10">10 secondes</option><option value="15">15 secondes</option><option value="20">20 secondes</option><option value="30">30 secondes</option><option value="60">60 secondes</option></select></label>
+          <label class="field">Sens des questions<select id="directionSelect"><option value="forward">Français → Allemand</option><option value="reverse">Allemand → Français</option></select></label>
+          <details class="scoring-settings"><summary>Barème <span>personnalisable</span></summary><div class="scoring-grid"><label class="field">Bonne réponse +<input id="correctPoints" type="number" min="0" max="100" step="1" value="3"></label><label class="field">Erreur −<input id="incorrectPenalty" type="number" min="0" max="100" step="1" value="2"></label><label class="field">Faux départ −<input id="falseStartPenalty" type="number" min="0" max="100" step="1" value="1"></label></div><button id="resetScoring" class="text-btn">Rétablir +3 / −2 / −1</button><p class="small muted">Erreur = la bonne équipe reste assise. Faux départ = une autre équipe se lève. 0 désactive une pénalité.</p></details>
+          <details class="team-details"><summary>Noms des équipes</summary><div id="teamNames" class="team-names"></div></details>
+          <details class="advanced-settings"><summary>Plus d’options</summary><label class="checkbox-label"><input id="largeText" type="checkbox">Très grands caractères en projection</label></details>
+          <p id="gameReadiness" class="small muted"></p>
+          <button id="startGameButton" class="btn primary launch"><svg class="icon filled"><use href="#i-play"/></svg>Lancer la partie</button>
+          <p class="launch-hint">La première manche démarre à votre signal.</p>
+        </section>
+      </div>
+      <section class="principle" aria-labelledby="principleHeading"><h2 id="principleHeading">Le principe</h2><ol><li><span>1</span><div><strong>Lisez la question</strong><p>Une question s’affiche pour toute la classe.</p></div></li><li><span>2</span><div><strong>Levez-vous si votre équipe a la réponse</strong><p>Une seule équipe a la bonne réponse.</p></div></li><li><span>3</span><div><strong>Révélez et attribuez les points</strong><p id="scoringSummary">+3 si réussi, −2 si manqué, −1 par faux départ.</p></div></li></ol></section>
+      <footer class="workspace-footer">StandUp Quiz 2.2.1 · Créé par S. Bovat</footer>
+    </main>
+  </div>
+  <main id="gameView" class="game-view" hidden aria-label="Partie en cours">
+    <section id="cooperativeBoard" class="cooperative-board" aria-label="Score et objectif de la classe" hidden></section>
+    <section class="question-area"><div class="question-copy"><p id="roundLabel" class="round-label"></p><h1 id="questionWord">Prêts à vous lever ?</h1><p id="questionInstruction">La première manche démarre à votre signal.</p><p id="revealedAnswer" class="revealed-answer" hidden></p></div><div id="timer" class="timer" role="timer" aria-label="Temps restant"><div><strong id="timerNumber">5</strong><span id="timerUnit">secondes</span></div></div></section>
+    <section id="teamsContainer" class="teams-grid" aria-label="Réponses et scores des équipes"></section>
+    <div class="game-controls"><div class="control-left"><button id="pauseButton" class="btn secondary" hidden><svg class="icon"><use href="#i-pause"/></svg><span>Pause</span></button><button id="undoButton" class="btn ghost" hidden><svg class="icon"><use href="#i-undo"/></svg>Annuler les points</button><button id="finishButton" class="btn ghost">Terminer</button><div id="commonCorrection" class="common-correction" hidden><button class="btn icon-btn" data-common-delta="-1" aria-label="Retirer un point collectif">−</button><span>Classe</span><button class="btn icon-btn" data-common-delta="1" aria-label="Ajouter un point collectif">+</button></div></div><p id="roundStatus" class="round-status" role="status"></p><div id="roundActions" class="round-actions"></div></div>
+    <p class="keyboard-hints"><kbd>Espace</kbd> démarrer / pause / suite <span>·</span> <kbd>Entrée</kbd> révéler <span>·</span> <kbd>F</kbd> plein écran <span>·</span> <kbd>1–6</kbd> faux départ après révélation</p>
+  </main>
+  <main id="summaryView" class="summary-view" hidden aria-label="Bilan de la partie"></main>
+  <dialog id="appDialog" aria-labelledby="dialogTitle"><form method="dialog" class="dialog-close-form"><button class="btn icon-btn" aria-label="Fermer la fenêtre"><svg class="icon"><use href="#i-close"/></svg></button></form><div id="dialogContent"></div></dialog>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <input id="fileInput" type="file" accept=".txt,.csv,.tsv,.standup,.json" hidden>
+</body>
+</html>

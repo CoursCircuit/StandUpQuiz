@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="color-scheme" content="light">
+  <title>StandUp Quiz — Écran élèves</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="view.js" defer></script>
+  <script src="projection.js" defer></script>
+</head>
+<body class="audience-view">
+  <header class="app-header"><div class="brand"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span>StandUp Quiz</span></div><p id="gameMeta" class="game-meta"></p><button id="projectionFullscreen" class="projection-fullscreen" title="Plein écran (F)">Plein écran ↗</button></header>
+  <main id="lobbyView" class="audience-lobby"><div class="lobby-symbol" aria-hidden="true">↑</div><p>LE DÉFI COLLECTIF</p><h1>Le prochain défi<br>se prépare…</h1><p>Formez vos équipes. À vous de jouer bientôt !</p></main>
+  <main id="gameView" class="game-view" hidden aria-label="Partie en cours">
+    <section id="cooperativeBoard" class="cooperative-board" aria-label="Score et objectif de la classe" hidden></section>
+    <section class="question-area"><div class="question-copy"><p id="roundLabel" class="round-label"></p><h1 id="questionWord"></h1><p id="questionInstruction"></p><p id="revealedAnswer" class="revealed-answer"></p></div><div id="timer" class="timer" role="timer" aria-label="Temps restant"><div><strong id="timerNumber"></strong><span id="timerUnit"></span></div></div></section>
+    <section id="teamsContainer" class="teams-grid" aria-label="Réponses des équipes"></section>
+    <p id="audienceStatus" class="audience-status" role="status">À vous de jouer !</p>
+  </main>
+  <main id="summaryView" class="audience-summary" hidden aria-label="Bilan de la classe"></main>
+</body>
+</html>
